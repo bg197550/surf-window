@@ -12,6 +12,8 @@ You can add a public YouTube cam to any beach through **Add custom cam**. That c
 
 ## Data and limitations
 
+Beach surf height is an estimate: each offshore wave train (swell and wind waves) is converted to approximate breaking height with the Komar & Gaughan relation (period and height), reduced for the angle between the swell direction and the beach's facing, then combined. It's shown as a range with a body reference (knee–thigh, waist–chest, etc.). Add `surfFactor` to a beach (e.g. `surfFactor:.8`) to calibrate it against what the cam shows.
+
 The overview opens with a regional outlook for Massachusetts, New Hampshire & Southern Maine, and Rhode Island. For each region it picks the next Good daylight window in the 7-day model (or the next Fair one if there's no Good), names the beach, lists other beaches working at the same time, summarizes the swell trend, and links straight to that beach's Surfline, Surf Captain, and Surf-Forecast pages to confirm. Everything is computed in the browser from free data; there are no API keys or paid services.
 
 Surf windows are daylight blocks in the next 48 hours rated Good or Fair from the Open-Meteo hourly forecast: the larger of the swell and wind-wave trains (height and period), whether the swell direction reaches the beach, and wind direction and speed relative to the beach's facing (`shore` angle). Thresholds live in `SURF` and `rateHour()` in `index.html`.
