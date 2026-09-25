@@ -160,13 +160,13 @@ function regionOutlook(r){
  const nowH=hrs.filter(h=>Math.abs(tmin(h.t)-now)<60).sort((a,c)=>c.ht-a.ht)[0];
  const peak=hrs.filter(h=>Number.isFinite(h.ht)).sort((a,c)=>c.ht*c.ht*c.per-a.ht*a.ht*a.per)[0];
  const trend=nowH&&peak?`Swell now ${fmt(nowH.ht,' ft')} @ ${fmt(nowH.per,' s')} ${dir(nowH.sdir)}; ${tmin(peak.t)-now<=90||peak.ht<=nowH.ht*1.15?'nothing bigger in the 7-day model.':`peaks ~${fmt(peak.ht,' ft')} @ ${fmt(peak.per,' s')} ${dir(peak.sdir)} ${dLabel(peak.t)} ${hLabel(peak.t)}.`}`:'';
- if(!best){const b=bs[0];return `<div class="watch"><b>No Good or Fair daylight window in the next 7 days</b></div>${forecastLinks(b)}`}
+ if(!best){const b=bs[0];return `<div class="watch"><b>No Good or Fair daylight window in the next 7 days</b></div>${forecastLinks(b,false)}`}
  const b=best.b,p=best.peak;
  const ws=best.hours.map(h=>h.wind).filter(Number.isFinite),lo=Math.floor(Math.min(...ws)/5)*5,hi=Math.max(lo+5,Math.ceil(Math.max(...ws)/5)*5);
  const ex={};best.hours.forEach(h=>{const e=windExposure(b,h.wdir,h.wind);ex[e]=(ex[e]||0)+1});const exp=Object.keys(ex).sort((x,y)=>ex[y]-ex[x])[0];
  const wind=exp==='Calm'?'calm winds':`${exp.toLowerCase()} ${lo}–${hi} mph`;
- return `<div class="watch"><span class="muted">Next window to watch</span><b>${windowRange(best)} · <a class="beach-link" href="#${b.id}">${safe(b.name)}</a></b>${ratingTag(best.rating)}</div>
- <p class="outlook"><strong>${surfRange(beachSurf(b,p))}</strong> · ${wind}</p>${forecastLinks(b)}`
+ return `<div class="watch"><span class="muted">Next window to watch</span><b><a class="beach-link" href="#${b.id}">${safe(b.name)}</a> · ${windowRange(best)}</b>${ratingTag(best.rating)}</div>
+ <p class="outlook"><strong>${surfRange(beachSurf(b,p))}</strong> · ${wind}</p>${forecastLinks(b,false)}`
 }
 function regionsHTML(){return `<section class="regions" aria-label="Regional surf outlook">${REGIONS.map(r=>`<article class="panel panelpad region"><div class="eyebrow">Regional outlook</div><h2>${safe(r.name)}</h2><div data-live-region="${r.id}">${regionOutlook(r)}</div></article>`).join('')}</section>`}
 function updateRegions(){REGIONS.forEach(r=>document.querySelectorAll(`[data-live-region="${r.id}"]`).forEach(el=>el.innerHTML=regionOutlook(r)))}
