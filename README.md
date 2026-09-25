@@ -6,7 +6,7 @@ Open `index.html` in a browser or serve this repository as a static site. No bui
 
 ## Beaches and cameras
 
-Nahant, North Hampton State Beach, Jenness, Kennebunk, Long Sands, Point Judith, First Beach (Newport), Second Beach (Middletown), Narragansett, Nantasket/Hull, and Good Harbor. In-page players are configured for Cinnamon Rainbows, the two YouTube feeds, the Jenness Summer Sessions page crop, and the Surfline-hosted players used by partner pages (Long Sands, Point Judith, First/Second Beach, Good Harbor). Narragansett plays the Warm Winds live stream directly (HLS video via hls.js, native on Safari/iOS), with the Northeast Surfing cam as a still image. Nantasket/Hull shows the Northeast Surfing cam as a still image refreshed every 30 seconds, because its player page blocks embedding.
+Nahant, North Hampton State Beach, Jenness, Kennebunk, Long Sands, Point Judith, First Beach (Newport), Second Beach (Middletown), Narragansett, Nantasket/Hull, and Good Harbor. In-page players are configured for Cinnamon Rainbows, the two YouTube feeds, the Jenness Summer Sessions Rhombus share player (with the older cropped-page view kept as a second option), and the Surfline-hosted players used by partner pages (Long Sands, Point Judith, First/Second Beach, Good Harbor). Narragansett plays the Warm Winds live stream directly (HLS video via hls.js, native on Safari/iOS), with the Northeast Surfing cam as a still image. Nantasket/Hull shows the Northeast Surfing cam as a still image refreshed every 30 seconds, because its player page blocks embedding.
 
 You can add a public YouTube cam to any beach through **Add custom cam**. That choice is saved in your browser only.
 
