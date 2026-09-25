@@ -14,4 +14,4 @@ You can add a public YouTube cam to any beach through **Add custom cam**. That c
 
 Open-Meteo provides the offshore marine model and nearby weather, refreshed every 15 minutes while the dashboard is open. Offshore wave height is not beach breaking-wave height. Surf-Forecast supplies the embedded 48-hour widget. Surf Captain and Surfline are linked for beach-level checks; their report figures are not scraped or republished.
 
-This repository is a copy of the separately hosted static page. Changing this repository alone does not update that deployment.
+The GitHub Pages workflow publishes changes to this repository once Pages is enabled in Settings → Pages with Source set to GitHub Actions. The separately hosted private version has its own deployment and does not update from GitHub.
