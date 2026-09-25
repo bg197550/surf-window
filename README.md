@@ -12,7 +12,7 @@ You can add a public YouTube cam to any beach through **Add custom cam**. That c
 
 ## Data and limitations
 
-Each beach page has a NOAA NEXRAD radar loop (last 50 minutes in 5-minute frames, base reflectivity composite from the Iowa Environmental Mesonet, drawn with Leaflet on a CARTO basemap) and a Windy surface-wind map. No API keys.
+Each beach page has a NOAA NEXRAD radar loop (last 50 minutes in 5-minute frames, base reflectivity composite from the Iowa Environmental Mesonet, drawn with Leaflet on a darkened OpenStreetMap basemap) and a Windy surface-wind map. No API keys.
 
 Beach surf height is an estimate: each offshore wave train (swell and wind waves) is converted to approximate breaking height with the Komar & Gaughan relation (period and height), reduced for the angle between the swell direction and the beach's facing, then combined. It's shown as a range in feet. Add `surfFactor` to a beach (e.g. `surfFactor:.8`) to calibrate it against what the cam shows.
 
