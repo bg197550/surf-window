@@ -6,7 +6,7 @@ Open `index.html` in a browser or serve this repository as a static site. No bui
 
 ## Beaches and cameras
 
-Nahant, Hampton, Jenness, Kennebunk, Long Sands, Point Judith, First Beach (Newport), Second Beach (Middletown), Narragansett, Nantasket/Hull, and Good Harbor. In-page players are configured for Cinnamon Rainbows, the two YouTube feeds, the Jenness Summer Sessions page crop, and the Surfline-hosted players used by partner pages (Long Sands, Point Judith, First/Second Beach, Good Harbor). Nantasket/Hull and Narragansett block embedding, so they link to their publisher pages.
+Nahant, North Hampton State Beach, Jenness, Kennebunk, Long Sands, Point Judith, First Beach (Newport), Second Beach (Middletown), Narragansett, Nantasket/Hull, and Good Harbor. In-page players are configured for Cinnamon Rainbows, the two YouTube feeds, the Jenness Summer Sessions page crop, and the Surfline-hosted players used by partner pages (Long Sands, Point Judith, First/Second Beach, Good Harbor). Nantasket/Hull and Narragansett block embedding, so they link to their publisher pages.
 
 You can add a public YouTube cam to any beach through **Add custom cam**. That choice is saved in your browser only.
 
