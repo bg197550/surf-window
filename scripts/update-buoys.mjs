@@ -16,7 +16,7 @@ async function buoy(id){
   const out={id,...BUOYS[id]};
   const std=rows(await text(`https://www.ndbc.noaa.gov/data/realtime2/${id}.txt`));
   const wave=std.find(o=>num(o.WVHT)!=null);
-  if(wave){out.time=stamp(wave);out.wvht_ft=round(num(wave.WVHT)*M_TO_FT);out.dpd=num(wave.DPD);out.apd=num(wave.APD);out.mwd=num(wave.MWD);out.wtmp_f=num(wave.WTMP)==null?null:round(num(wave.WTMP)*9/5+32,0)}
+  if(wave){out.time=stamp(wave);out.wvht_ft=round(num(wave.WVHT)*M_TO_FT);out.dpd=num(wave.DPD);if(out.dpd==null){const alt=std.find(o=>num(o.DPD)!=null&&Math.abs(Date.parse(stamp(o))-Date.parse(out.time))<=90*60000);out.dpd=alt?num(alt.DPD):null}out.apd=num(wave.APD);out.mwd=num(wave.MWD);out.wtmp_f=num(wave.WTMP)==null?null:round(num(wave.WTMP)*9/5+32,0)}
   const wind=std.find(o=>num(o.WSPD)!=null);
   if(wind){out.wspd_mph=round(num(wind.WSPD)*MS_TO_MPH,0);out.gst_mph=num(wind.GST)==null?null:round(num(wind.GST)*MS_TO_MPH,0);out.wdir=num(wind.WDIR);out.wind_time=stamp(wind)}
   try{const spec=rows(await text(`https://www.ndbc.noaa.gov/data/realtime2/${id}.spec`)).find(o=>num(o.SwH)!=null);
