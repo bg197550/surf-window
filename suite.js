@@ -7,7 +7,7 @@ document.querySelectorAll('.suite-apps[data-app]').forEach(function(n){var cur=n
    In-page answers come from Gemini through the Cloudflare Worker at AI_URL (free tier); when AI_URL is empty
    only the "Open in Claude / ChatGPT" hand-offs are shown. */
 (function(){
-  var AI_URL='';
+  var AI_URL='https://window-ai.bgandel.workers.dev';
   var MAX_URL_PROMPT=6000,MAX_COPY=24000,MAX_CTX=30000,log=[];
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function fmt(t){return esc(t).replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/^\s*[-*•]\s+/gm,'• ').replace(/\n/g,'<br>')}
