@@ -26,18 +26,29 @@ header.suite{padding:0;margin:0;display:block}
 @media(min-width:651px){.suite-nav-inner{flex-wrap:wrap;overflow:visible}
 }
 
-/* Ask AI */
-.ask-fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:1600;display:inline-flex;align-items:center;gap:7px;border:1px solid #57c5df;background:#0b2130;color:#eaf6f8;border-radius:999px;padding:11px 17px;font:700 14.5px Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 6px 22px #0009;cursor:pointer}
-.ask-fab span{color:#f5b942}
-.ask-fab:hover{background:#15344a}
-.ask-sheet{position:fixed;right:18px;bottom:calc(74px + env(safe-area-inset-bottom,0px));z-index:1600;width:min(380px,calc(100vw - 24px));background:#0f2a39;color:#eaf6f8;border:1px solid #2f5163;border-radius:14px;padding:14px;box-shadow:0 12px 40px #000a;font:14.5px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+/* Ask AI (opened from the app bar) */
+.ask-btn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid #2f5163;background:#15344a;color:#eaf6f8;border-radius:10px;padding:8px 13px;font:700 14px Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap}
+.ask-btn span[aria-hidden]{color:#f5b942}
+.ask-btn:hover,.ask-btn[aria-expanded=true]{background:#1d4460;border-color:#57c5df}
+.suite-inner .suite-meta{margin-left:4px}.ask-btn .suite-long{margin-left:-2px}
+.ask-sheet{position:fixed;right:max(12px,calc((100vw - var(--suite-max,1300px))/2 + var(--suite-pad,20px)));top:64px;z-index:1600;width:min(420px,calc(100vw - 24px));max-height:calc(100vh - 84px);display:flex;flex-direction:column;background:#0f2a39;color:#eaf6f8;border:1px solid #2f5163;border-radius:14px;padding:14px;box-shadow:0 12px 40px #000a;font:14.5px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
 .ask-sheet[hidden]{display:none}
 .ask-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ask-head span{display:flex;align-items:center;gap:6px}
 .ask-close{border:0;background:transparent;color:#a9c2d0;font-size:22px;line-height:1;cursor:pointer;padding:0 4px}
-.ask-q{width:100%;box-sizing:border-box;resize:vertical;min-height:70px;background:#071d2b;color:#eaf6f8;border:1px solid #2f5163;border-radius:9px;padding:9px 10px;font:inherit}
+.ask-clear{border:0;background:transparent;color:#70d9de;font:600 13px inherit;font-family:inherit;cursor:pointer}
+.ask-log{overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:10px;min-height:0;flex:1}
+.ask-log[hidden]{display:none}
+.ask-msg{padding:8px 11px;border-radius:10px;max-width:92%;overflow-wrap:anywhere}
+.ask-msg.me{align-self:flex-end;background:#1d4460}
+.ask-msg.ai{align-self:flex-start;background:#071d2b;border:1px solid #2a4a59}
+.ask-msg.err{border-color:#9c5a00;color:#ffd79a}
+.ask-q{width:100%;box-sizing:border-box;resize:vertical;min-height:54px;background:#071d2b;color:#eaf6f8;border:1px solid #2f5163;border-radius:9px;padding:9px 10px;font:inherit}
 .ask-q:focus{outline:2px solid #57c5df;outline-offset:1px}
 .ask-actions{display:flex;gap:8px;margin-top:10px}
-.ask-go{flex:1;border:1px solid #57c5df;background:#133a4c;color:#eaf6f8;border-radius:9px;padding:10px 12px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer}
-.ask-go:first-child{background:#eaf6f8;color:#0b2130;border-color:#eaf6f8}
-.ask-status{margin:10px 0 0;font-size:12.5px;color:#a9c2d0}
-@media(max-width:650px){.ask-fab{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:10px 15px}.ask-sheet{right:12px;left:12px;width:auto;bottom:calc(64px + env(safe-area-inset-bottom,0px))}}
+.ask-go,.ask-send{flex:1;border:1px solid #57c5df;background:#133a4c;color:#eaf6f8;border-radius:9px;padding:10px 12px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.ask-go:first-child,.ask-send{background:#eaf6f8;color:#0b2130;border-color:#eaf6f8}
+.ask-alt{margin-top:8px;font-size:13px;color:#a9c2d0}
+.ask-link{border:0;background:transparent;color:#70d9de;font:inherit;padding:0;cursor:pointer}
+.ask-status{margin:8px 0 0;font-size:12.5px;color:#a9c2d0}
+@media(max-width:650px){.ask-btn{padding:7px 11px}.ask-sheet{left:10px;right:10px;width:auto;top:58px;max-height:calc(100vh - 70px)}}
