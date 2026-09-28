@@ -12,7 +12,7 @@ document.querySelectorAll('.suite-apps[data-app]').forEach(function(n){var cur=n
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function fmt(t){return esc(t).replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/^\s*[-*•]\s+/gm,'• ').replace(/\n/g,'<br>')}
   function clean(t){return String(t||'').replace(/Feed not loading\? ↗|Surfline ↗|Surf Captain ↗|Surf-Forecast ↗|Open [^\n]*↗/g,'').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim()}
-  function ctx(){var c=(typeof window.suiteContext==='function'&&window.suiteContext())||{app:document.title,view:'',text:document.body.innerText};c.text=clean(c.text);return c}
+  function ctx(q){var c=(typeof window.suiteContext==='function'&&window.suiteContext(q))||{app:document.title,view:'',text:document.body.innerText};function finish(v){v.text=clean(v.text);return v}return c&&typeof c.then==='function'?c.then(finish):finish(c)}
   function handoff(q,limit){var c=ctx(),when=new Date().toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'});
     var head='I\'m looking at my '+c.app+' dashboard'+(c.view?' ('+c.view+')':'')+' on '+when+'.\n\n'+(q?'My question: '+q:'Give me a quick read of what this shows: what stands out, and what should I watch for?')+'\n\nAnswer briefly and use the data below. '+(c.note||'')+'\n\n--- What the page shows ---\n';
     var room=limit-head.length,cut=c.text.length>room;return {text:head+(cut?c.text.slice(0,Math.max(0,room-80))+'\n[…trimmed; the full page data is on my clipboard if you need it]':c.text),full:head+c.text.slice(0,MAX_COPY)}}
@@ -28,7 +28,7 @@ document.querySelectorAll('.suite-apps[data-app]').forEach(function(n){var cur=n
     sheet.innerHTML='<div class="ask-head"><b>Ask about this page</b><span><button type="button" class="ask-clear" hidden>Clear</button><button type="button" class="ask-close" aria-label="Close">×</button></span></div>'+
       '<div class="ask-log" aria-live="polite"></div>'+
       '<textarea class="ask-q" rows="2" placeholder="e.g. Where should I surf tomorrow morning?"></textarea>'+
-      (AI_URL?'<div class="ask-actions"><button type="button" class="ask-send">Ask</button></div><div class="ask-alt">Need outside sources? Open in <button type="button" class="ask-link" data-ai="claude">Claude ↗</button> · <button type="button" class="ask-link" data-ai="chatgpt">ChatGPT ↗</button></div><p class="ask-status">Answered by Gemini (free tier) using what\'s on this page and related dashboard data.</p>'
+      (AI_URL?'<div class="ask-actions"><button type="button" class="ask-send">Ask</button></div><div class="ask-alt">Need outside sources? Open in <button type="button" class="ask-link" data-ai="claude">Claude ↗</button> · <button type="button" class="ask-link" data-ai="chatgpt">ChatGPT ↗</button></div><p class="ask-status">Answered by Gemini using the current view and relevant Weather forecasts when available.</p>'
              :'<div class="ask-actions"><button type="button" class="ask-go" data-ai="claude">Ask Claude</button><button type="button" class="ask-go" data-ai="chatgpt">Ask ChatGPT</button></div><p class="ask-status">Opens your question with this page\'s data in your own Claude or ChatGPT account.</p>');
     document.body.appendChild(sheet);
     var q=sheet.querySelector('.ask-q'),status=sheet.querySelector('.ask-status'),logEl=sheet.querySelector('.ask-log'),clear=sheet.querySelector('.ask-clear'),busy=false;
@@ -36,8 +36,8 @@ document.querySelectorAll('.suite-apps[data-app]').forEach(function(n){var cur=n
     function draw(){logEl.innerHTML=log.map(function(m){return '<div class="ask-msg '+(m.role==='user'?'me':'ai')+(m.error?' err':'')+'">'+fmt(m.content)+(m.sources&&m.sources.length?'<div class="ask-src">Sources: '+m.sources.slice(0,5).map(function(x){return '<a href="'+esc(x.uri)+'" target="_blank" rel="noopener">'+esc(x.title||x.uri)+'</a>'}).join(' · ')+'</div>':'')+'</div>'}).join('');logEl.hidden=!log.length;clear.hidden=!log.length;logEl.scrollTop=logEl.scrollHeight}
     function send(){var text=q.value.trim()||'Give me a quick read of this page: what stands out and what should I watch for?';if(busy)return;busy=true;
       log.push({role:'user',content:text});log.push({role:'assistant',content:'Thinking…',pending:true});q.value='';draw();
-      var c=ctx(),msgs=log.filter(function(m){return !m.pending&&!m.error}).map(function(m){return {role:m.role,content:m.content}});
-      fetch(AI_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app:c.app,view:c.view,note:c.note||'',context:c.text.slice(0,MAX_CTX),messages:msgs})})
+      var msgs=log.filter(function(m){return !m.pending&&!m.error}).map(function(m){return {role:m.role,content:m.content}});
+      Promise.resolve().then(function(){return ctx(text)}).then(function(c){return fetch(AI_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app:c.app,view:c.view,note:c.note||'',context:c.text.slice(0,MAX_CTX),messages:msgs})})})
         .then(function(r){return r.json().catch(function(){return {error:'Unexpected response'}}).then(function(d){return {ok:r.ok,d:d}})})
         .then(function(x){log.pop();log.push(x.ok&&x.d.text?{role:'assistant',content:x.d.text,sources:x.d.sources}:{role:'assistant',content:x.d.error||'Something went wrong. Try again.',error:true})})
         .catch(function(){log.pop();log.push({role:'assistant',content:'Couldn\'t reach the AI service. Check your connection and try again.',error:true})})
