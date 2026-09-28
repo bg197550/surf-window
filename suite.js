@@ -28,7 +28,7 @@ document.querySelectorAll('.suite-apps[data-app]').forEach(function(n){var cur=n
     sheet.innerHTML='<div class="ask-head"><b>Ask about this page</b><span><button type="button" class="ask-clear" hidden>Clear</button><button type="button" class="ask-close" aria-label="Close">×</button></span></div>'+
       '<div class="ask-log" aria-live="polite"></div>'+
       '<textarea class="ask-q" rows="2" placeholder="e.g. Where should I surf tomorrow morning?"></textarea>'+
-      (AI_URL?'<label class="ask-web"><input type="checkbox" class="ask-web-on"> Also search the web (slower; cites sources)</label><div class="ask-actions"><button type="button" class="ask-send">Ask</button></div><div class="ask-alt">Or open in <button type="button" class="ask-link" data-ai="claude">Claude ↗</button> · <button type="button" class="ask-link" data-ai="chatgpt">ChatGPT ↗</button></div><p class="ask-status">Answered by Gemini (free tier) using what\'s on this page and related dashboard data.</p>'
+      (AI_URL?'<div class="ask-actions"><button type="button" class="ask-send">Ask</button></div><div class="ask-alt">Need outside sources? Open in <button type="button" class="ask-link" data-ai="claude">Claude ↗</button> · <button type="button" class="ask-link" data-ai="chatgpt">ChatGPT ↗</button></div><p class="ask-status">Answered by Gemini (free tier) using what\'s on this page and related dashboard data.</p>'
              :'<div class="ask-actions"><button type="button" class="ask-go" data-ai="claude">Ask Claude</button><button type="button" class="ask-go" data-ai="chatgpt">Ask ChatGPT</button></div><p class="ask-status">Opens your question with this page\'s data in your own Claude or ChatGPT account.</p>');
     document.body.appendChild(sheet);
     var q=sheet.querySelector('.ask-q'),status=sheet.querySelector('.ask-status'),logEl=sheet.querySelector('.ask-log'),clear=sheet.querySelector('.ask-clear'),busy=false;
@@ -37,7 +37,7 @@ document.querySelectorAll('.suite-apps[data-app]').forEach(function(n){var cur=n
     function send(){var text=q.value.trim()||'Give me a quick read of this page: what stands out and what should I watch for?';if(busy)return;busy=true;
       log.push({role:'user',content:text});log.push({role:'assistant',content:'Thinking…',pending:true});q.value='';draw();
       var c=ctx(),msgs=log.filter(function(m){return !m.pending&&!m.error}).map(function(m){return {role:m.role,content:m.content}});
-      fetch(AI_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app:c.app,view:c.view,note:c.note||'',context:c.text.slice(0,MAX_CTX),messages:msgs,web:!!(sheet.querySelector('.ask-web-on')||{}).checked})})
+      fetch(AI_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app:c.app,view:c.view,note:c.note||'',context:c.text.slice(0,MAX_CTX),messages:msgs})})
         .then(function(r){return r.json().catch(function(){return {error:'Unexpected response'}}).then(function(d){return {ok:r.ok,d:d}})})
         .then(function(x){log.pop();log.push(x.ok&&x.d.text?{role:'assistant',content:x.d.text,sources:x.d.sources}:{role:'assistant',content:x.d.error||'Something went wrong. Try again.',error:true})})
         .catch(function(){log.pop();log.push({role:'assistant',content:'Couldn\'t reach the AI service. Check your connection and try again.',error:true})})
