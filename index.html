@@ -30,11 +30,11 @@ function snapURL(u){return u+(u.includes('?')?'&':'?')+'t='+Date.now()}
 function streamCam(b,c,hero){
  const alt=b.cams.find(x=>x.snapshot&&x!==c);
  const media=c.hls?`<video data-hls="${safe(c.hls)}"${alt?` data-fallback="${safe(alt.snapshot)}" data-fallback-name="${safe(alt.name)}"`:''} muted autoplay playsinline controls aria-label="${safe(b.name)} · ${safe(c.name)} live video"></video>`
-  :`<div class="camempty">Waiting for camera image…</div><img class="snap" data-snapshot="${safe(c.snapshot)}" src="${safe(snapURL(c.snapshot))}" alt="${safe(b.name)} · ${safe(c.name)} camera still" style="visibility:hidden" onload="this.style.visibility='visible'" onerror="this.style.visibility='hidden'">`;
+  :`<div class="camempty">Waiting for camera image…</div><img class="snap" data-snapshot="${safe(c.snapshot)}" src="${safe(snapURL(c.snapshot))}" alt="${safe(b.name)} · ${safe(c.name)} camera still" referrerpolicy="no-referrer" style="visibility:hidden" onload="this.style.visibility='visible'" onerror="this.style.visibility='hidden'">`;
  return `<div class="cam ${hero?'hero-cam':''}">${media}<span class="cam-label">CAMERA · ${safe(c.name)}${c.snapshot?` · STILL, ${SNAPSHOT_SECONDS}s`:' · LIVE'}</span><a class="cam-source" href="${safe(c.url)}" target="_blank" rel="noopener noreferrer">Feed not loading? ↗</a></div>`
 }
 function streamFail(v){if(!v.isConnected)return;const fb=v.dataset.fallback,cam=v.closest('.cam');
- if(fb){const img=document.createElement('img');img.className='snap';img.dataset.snapshot=fb;img.alt='Camera still';img.style.visibility='hidden';img.onload=()=>img.style.visibility='visible';img.onerror=()=>img.style.visibility='hidden';img.src=snapURL(fb);
+ if(fb){const img=document.createElement('img');img.referrerPolicy='no-referrer';img.className='snap';img.dataset.snapshot=fb;img.alt='Camera still';img.style.visibility='hidden';img.onload=()=>img.style.visibility='visible';img.onerror=()=>img.style.visibility='hidden';img.src=snapURL(fb);
   const msg=document.createElement('div');msg.className='camempty';msg.textContent='Waiting for camera image…';v.replaceWith(msg,img);
   const l=cam?.querySelector('.cam-label');if(l)l.textContent=`CAMERA · ${v.dataset.fallbackName} · STILL, ${SNAPSHOT_SECONDS}s (live stream unavailable)`;return}
  const d=document.createElement('div');d.className='camempty';d.innerHTML='<span class="camicon">◉</span>Live stream unavailable right now.';v.replaceWith(d)}
@@ -72,7 +72,10 @@ function initRadar(){
   r.refresh=setInterval(()=>{stamp=Math.floor(Date.now()/300000);layers.forEach((l,k)=>l.setUrl(radarURL(RADAR_FRAMES[k],stamp)))},300000);
   radarMaps.push(r)})).catch(()=>els.forEach(el=>{const t=el.querySelector('.radar-time');if(t)t.textContent='Radar unavailable right now.'}))
 }
-function camChoices(b){return `<div class="source-row">${b.cams.map((c,i)=>`<button class="tab ${!camURL(b)&&(selectedCam[b.id]||0)===i?'active':''}" data-selectcam="${b.id}:${i}">${safe(c.name)}${c.embed||c.pageCrop||c.hls||c.snapshot?' · watch here':' ↗'}</button>`).join('')}</div>`}
+function camChoices(b){const cur=camURL(b)?-1:(selectedCam[b.id]||0),inPage=c=>c.embed||c.pageCrop||c.hls||c.snapshot,live=b.cams.map((c,i)=>[c,i]).filter(([c])=>inPage(c)),ext=b.cams.map((c,i)=>[c,i]).filter(([c])=>!inPage(c));
+ const sw=live.length>1?live.map(([c,i])=>i===cur?`<button class="tab active" aria-current="true" disabled>▶ ${safe(c.name)} · showing</button>`:`<button class="tab" data-selectcam="${b.id}:${i}">Switch to ${safe(c.name)}</button>`).join(''):'';
+ const ex=ext.map(([c,i])=>`<button class="tab" data-selectcam="${b.id}:${i}">${safe(c.name)} ↗</button>`).join('');
+ return sw||ex?`<div class="source-row">${sw}${ex}</div>`:''}
 
 function stat(v,label){return `<div class="stat"><b>${safe(v)}</b><span>${label}</span></div>`}
 function stats(b,full=false){let d=data[b.id]||{};return `<div class="stats">${(()=>{const v=beachNow(b);return stat(surfRange(v),'At beach · est.')})()}${stat(`${fmt(d.wave,' ft')} @ ${fmt(d.period,' s')}`,'Offshore model')}${(()=>{const w=windNow(b);return stat(fmt(w.speed,' mph'),'Wind · '+dir(w.dir)+(w.obs?' · observed':' · model'))+stat(windExposure(b,w.dir,w.speed),'Wind exposure · est.')})()}${full?stat(fmt(d.air,'°F'),'Air temperature'):''}</div>`}
