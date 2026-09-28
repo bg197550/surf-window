@@ -1,6 +1,6 @@
 /* Shared Surf / Weather app switcher. Fills <nav class="suite-apps" data-app="surf|weather">. */
-(function(){var APPS=[['surf','https://bg197550.github.io/surf-window/','\u224B','Surf'],['weather','https://bg197550.github.io/weather-window/','\u2601','Weather']];
-document.querySelectorAll('.suite-apps[data-app]').forEach(function(n){var cur=n.getAttribute('data-app');n.innerHTML=APPS.map(function(a){return '<a class="suite-app" href="'+a[1]+'"'+(a[0]===cur?' aria-current="page"':'')+'><span class="suite-icon" aria-hidden="true">'+a[2]+'</span>'+a[3]+'<span class="suite-long">Window</span></a>'}).join('')})})();
+(function(){var APPS=[['weather','https://bg197550.github.io/weather-window/','\u2601','Weather'],['surf','https://bg197550.github.io/surf-window/','\u224B','Surf']];
+document.querySelectorAll('.suite-apps[data-app]').forEach(function(n){var cur=n.getAttribute('data-app');n.innerHTML=APPS.map(function(a){return '<a class="suite-app" href="'+a[1]+'"'+(a[0]===cur?' aria-current="page"':'')+'><span class="suite-icon" aria-hidden="true">'+a[2]+'</span>'+a[3]+'</a>'}).join('')})})();
 
 /* Shared "Ask AI" panel, opened from the app bar (no floating button).
    Each page sets window.suiteContext = () => ({app, view, text, note}).
