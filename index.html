@@ -186,20 +186,23 @@ async function fetchTides(){
  beaches.filter(b=>beachTide[b.id]===st).forEach(updateLive)}))
 }
 // ---------- Estimated surf height at the beach ----------
-// Offshore model waves -> approximate breaking (face) height using Komar & Gaughan (1972):
+// Offshore model waves -> approximate surf height (see periodFactor; calibrated to Surf Captain):
 // Hb = 0.39 g^0.2 (T H0^2)^0.4, reduced for swell angle relative to the beach's facing.
 // Each wave train (swell, wind waves) is transformed separately and combined by energy.
 // b.surfFactor (default 1) lets you calibrate a beach against the cam.
 function breakHeightFt(b,train){
  const H=train?.h,T=train?.p,D=train?.d;if(!Number.isFinite(H)||!Number.isFinite(T)||H<=0||T<=0)return 0;
  const th=Number.isFinite(D)?angleDiff(D,b.shore):0,dirF=th<90?Math.sqrt(Math.cos(th*Math.PI/180)):th<100?.15:0;
- if(!dirF)return 0;const H0=H*.3048,Hb=.39*Math.pow(9.81,.2)*Math.pow(T*H0*H0,.4);return Hb/.3048*dirF;
+ if(!dirF)return 0;return H*periodFactor(T)*dirF;
 }
-function beachSurf(b,h){if(!h)return null;const a=breakHeightFt(b,h.sw),c=breakHeightFt(b,h.ww),v=Math.sqrt(a*a+c*c)*(b.surfFactor||1)*biasFactor(b,h.t);return Number.isFinite(v)?v:null}
+// Calibrated against Surf Captain reports (Hampton, Sep 2026): reported surf ≈ primary swell × ~0.85 at 8 s, ~1.0 at 9–10 s.
+// Longer periods grow more on the way in; short-period wind chop adds little rideable size.
+function periodFactor(T){return Math.min(1.5,Math.max(.6,.85+.09*(T-8)))}
+function beachSurf(b,h){if(!h)return null;const a=breakHeightFt(b,h.sw),c=(h.ww&&Number.isFinite(h.ww.p)&&h.ww.p>=5)?breakHeightFt(b,h.ww)*.4:0,v=Math.sqrt(a*a+c*c)*(b.surfFactor||1)*biasFactor(b,h.t);return Number.isFinite(v)?v:null}
 // ---------- Buoy calibration: scale the model by measured/model wave height at the region's buoy ----------
 const BUOY_POS={'44013':[42.346,-70.651],'44098':[42.798,-70.168],'44097':[40.967,-71.126]};let buoyBias={};
 async function fetchBuoyModel(){await Promise.all(Object.entries(BUOY_POS).map(async([id,[lat,lon]])=>{try{const j=await (await fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&current=wave_height&length_unit=imperial&timezone=America%2FNew_York`)).json();const model=j.current?.wave_height,x=buoyData?.buoys?.[id];
-  if(!Number.isFinite(model)||model<.5||!x||!Number.isFinite(x.wvht_ft)||buoyAge(x)>180){delete buoyBias[id];return}buoyBias[id]={ratio:Math.min(1.6,Math.max(.6,x.wvht_ft/model)),model,measured:x.wvht_ft}}catch{delete buoyBias[id]}}));beaches.forEach(updateLive);updateRegions()}
+  if(!Number.isFinite(model)||model<.5||!x||!Number.isFinite(x.wvht_ft)||buoyAge(x)>180){delete buoyBias[id];return}buoyBias[id]={ratio:Math.min(1.3,Math.max(.75,x.wvht_ft/model)),model,measured:x.wvht_ft}}catch{delete buoyBias[id]}}));beaches.forEach(updateLive);updateRegions()}
 function biasFactor(b,t){const id=BUOY_FOR[regionOf(b)],bb=id&&buoyBias[id];if(!bb)return 1;const hrs=t?(tmin(t)-tmin(nyNow()))/60:0,w=hrs<=12?1:hrs>=48?0:1-(hrs-12)/36;return 1+(bb.ratio-1)*w}
 function biasNote(b){const id=BUOY_FOR[regionOf(b)],bb=id&&buoyBias[id];return bb&&Math.abs(bb.ratio-1)>=.05?` · buoy-adjusted ×${bb.ratio.toFixed(2)}`:''}
 function nowHour(b){const hrs=data[b.id]?.hours;if(!hrs)return null;const now=tmin(nyNow());return hrs.filter(h=>tmin(h.t)<=now).at(-1)||hrs[0]}
