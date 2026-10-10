@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-10-10T13:00:38.431Z",
+  "source": "NOAA National Data Buoy Center",
+  "buoys": {
+    "44013": {
+      "id": "44013",
+      "name": "Boston",
+      "short": "Boston",
+      "time": "2026-10-10T12:20:00Z",
+      "wvht_ft": 2.3,
+      "dpd": 3,
+      "apd": 3.2,
+      "mwd": 1,
+      "wtmp_f": 58,
+      "wspd_mph": 18,
+      "gst_mph": 22,
+      "wdir": 340,
+      "wind_time": "2026-10-10T12:30:00Z",
+      "swh_ft": 0.3,
+      "swp": 9.1,
+      "swd": "N",
+      "wwh_ft": 2.3,
+      "wwp": 3.3,
+      "wwd": "N"
+    },
+    "44097": {
+      "id": "44097",
+      "name": "Block Island",
+      "short": "Block Island",
+      "time": "2026-10-10T12:30:00Z",
+      "wvht_ft": 2,
+      "dpd": 3,
+      "apd": 3.3,
+      "mwd": 292,
+      "wtmp_f": 61,
+      "swh_ft": 0.3,
+      "swp": 10,
+      "swd": "SSE",
+      "wwh_ft": 2,
+      "wwp": 3.5,
+      "wwd": "WNW"
+    },
+    "44098": {
+      "id": "44098",
+      "name": "Jeffreys Ledge",
+      "short": "Jeffreys Ledge",
+      "time": "2026-10-10T12:30:00Z",
+      "wvht_ft": 3.3,
+      "dpd": 4,
+      "apd": 3.8,
+      "mwd": 309,
+      "wtmp_f": 56,
+      "swh_ft": 0.3,
+      "swp": 13.3,
+      "swd": "NNW",
+      "wwh_ft": 3.3,
+      "wwp": 4.3,
+      "wwd": "NW"
+    }
+  },
+  "errors": []
+}
