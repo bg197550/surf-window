@@ -260,7 +260,7 @@ function regionLine(r){
  const pickFrom=list=>{if(!list.length)return null;const first=Math.min(...list.map(w=>tmin(w.start)));return list.filter(w=>tmin(w.start)-first<=180).sort((a,c)=>score(c)-score(a))[0]};
  const best=pickFrom(all.filter(w=>w.rating==='Good'))||pickFrom(all);
  if(!best)return '<span class="muted">None in 7 days</span>';
- return `<a class="beach-link" href="#${best.b.id}">${safe(best.b.name)}</a> ${windowRange(best)} · <strong>${surfRange(beachSurf(best.b,best.peak))}</strong> ${ratingTag(best.rating)}`
+ return `<a class="beach-link" href="#${best.b.id}">${safe(best.b.name)}</a> ${windowRange(best)} · <strong>${surfRange(beachSurf(best.b,best.peak))}</strong>`
 }
 const AREA_SHORT={ma:'Massachusetts',nhme:'NH & S. Maine',ri:'Rhode Island'};
 // ---------- Best surf right now: estimated beach surf + current wind (offshore or calm) ----------
